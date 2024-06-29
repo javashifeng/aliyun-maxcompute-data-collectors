@@ -152,7 +152,7 @@ public class HdfsOdpsImportJob extends JobBase {
 
     if (!isDynamicPartitions(options.getOdpsPartitionValue())) {
       options.setOdpsDisableDynamicPartitions(true);
-      Log.info("Detect odps static partition specified.");
+      LOG.info("Detect odps static partition specified.");
     }
     this.disableDynamicPartitions = options.isOdpsDisableDynamicPartitions();
 

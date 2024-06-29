@@ -39,11 +39,15 @@ public class OdpsSplitter extends IntegerSplitter {
     }
     long splitLimit = org.apache.sqoop.config.ConfigurationHelper
         .getSplitLimit(conf);
+
+    LOG.info("method split: " + conf + ", count: " + count + ", numSplits: " + numSplits + ", splitLimit: " + splitLimit);
+
     List<Long> splitPoints = split(numSplits, splitLimit, 0, count);
     List<InputSplit> splits = new ArrayList<InputSplit>();
 
     long start = splitPoints.get(0);
     for (int i = 1; i < splitPoints.size(); i++) {
+
       long end = splitPoints.get(i);
       long readLength;
       if (i == splitPoints.size() - 1) {
@@ -51,9 +55,14 @@ public class OdpsSplitter extends IntegerSplitter {
       } else {
           readLength = end - start - 1;
       }
-      splits.add(new OdpsExportInputFormat
-          .OdpsExportInputSplit(start, readLength));
-      start = end;
+
+      LOG.info(" from: " + start + " to: " + end + " length: " + readLength);
+
+      if (readLength > 0) {
+        splits.add(new OdpsExportInputFormat
+                .OdpsExportInputSplit(start, readLength));
+        start = end;
+      }
     }
 
     return splits;

@@ -163,11 +163,11 @@ public class OdpsMetadata
             return TupleDomain.none();
         }
 
-        return withColumnDomains(
-                partitionColumns.stream()
-                        .collect(Collectors.toMap(
-                                identity(),
-                                column -> buildColumnDomain(column, partitions))));
+        Map<ColumnHandle, Domain> domainsMap = partitionColumns.stream()
+                .collect(Collectors.toMap(
+                        identity(),
+                        column -> buildColumnDomain(column, partitions)));
+        return withColumnDomains(domainsMap);
     }
 
     private static Domain buildColumnDomain(ColumnHandle column, List<OdpsPartition> partitions)

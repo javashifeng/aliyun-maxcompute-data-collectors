@@ -218,6 +218,30 @@ public class ExportTool extends com.cloudera.sqoop.tool.BaseSqoopTool {
         .withDescription("Set the ODPS endpoint")
         .withLongOpt(ODPS_ENDPOINT_ARG)
         .create());
+    odpsOpts.addOption(OptionBuilder.withArgName("tunnel endpoint")
+            .hasArg()
+            .withDescription("Set the ODPS tunnel endpoint if target table is ODPS offline table")
+            .withLongOpt(ODPS_TUNNEL_ENDPOINT_ARG)
+            .create());
+    odpsOpts.addOption(OptionBuilder.withArgName("column-name")
+            .hasArg()
+            .withDescription("Column of the table used to split work units")
+            .withLongOpt(SPLIT_BY_ARG)
+            .create());
+    odpsOpts.addOption(OptionBuilder
+                    .withArgName("size")
+                    .hasArg()
+                    .withDescription(
+                            "Upper Limit of rows per split for split columns of Date/Time/Timestamp and integer types. For date or timestamp fields it is calculated in seconds. split-limit should be greater than 0")
+                    .withLongOpt(SPLIT_LIMIT_ARG)
+                    .create());
+    odpsOpts.addOption(OptionBuilder.withArgName("n")
+            .hasArg()
+            .withDescription("Set number 'n' of rows to fetch from the "
+                    + "database when more rows are needed")
+            .withLongOpt(FETCH_SIZE_ARG)
+            .create());
+
     odpsOpts.addOption(OptionBuilder.withArgName("partitionSpec")
         .hasArg()
         .withDescription("Set the ODPS table partitionSpec")
