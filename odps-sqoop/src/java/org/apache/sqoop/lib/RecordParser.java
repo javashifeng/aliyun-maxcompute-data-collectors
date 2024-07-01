@@ -20,6 +20,8 @@ package org.apache.sqoop.lib;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -107,7 +109,7 @@ public class RecordParser {
       throw new com.cloudera.sqoop.lib.RecordParser.ParseError(
               "null input string");
     }
-    Map res = Maps.newHashMap();
+    Map<String, String> res = Maps.newHashMap();
     Column[] columns = input.getColumns();
     for (int i = 0; i < columns.length; i++) {
       String colValue = null;
@@ -124,7 +126,8 @@ public class RecordParser {
         }
         case DATETIME: {
           Date v = input.getDatetime(i);
-          colValue = v == null ? null : v.toString();
+          DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+          colValue = v == null ? null : df.format(v);
           break;
         }
         case DOUBLE: {

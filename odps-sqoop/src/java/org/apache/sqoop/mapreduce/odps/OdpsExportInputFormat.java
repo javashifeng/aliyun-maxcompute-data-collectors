@@ -22,10 +22,11 @@ import com.aliyun.odps.PartitionSpec;
 import com.aliyun.odps.account.AliyunAccount;
 import com.aliyun.odps.tunnel.TableTunnel;
 import com.aliyun.odps.tunnel.TunnelException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.*;
-import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.sqoop.odps.OdpsConstants;
 import org.apache.sqoop.odps.OdpsSqoopRecordReader;
 import org.apache.sqoop.odps.OdpsUtil;
@@ -37,6 +38,10 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class OdpsExportInputFormat extends InputFormat {
+
+    public static final Log LOG =
+            LogFactory.getLog(InputFormat.class.getName());
+
   @Override
   public List<InputSplit> getSplits(JobContext jobContext) throws IOException, InterruptedException {
       Configuration conf = jobContext.getConfiguration();
@@ -110,7 +115,8 @@ public class OdpsExportInputFormat extends InputFormat {
       @Override
       public void write(DataOutput dataOutput) throws IOException {
           dataOutput.writeLong(start);
-          dataOutput.writeLong(start + length - 1);
+          dataOutput.writeLong(start + length);
+          LOG.info("InputFormat write: start: " + start + ", end: " + (start + length));
       }
 
       @Override
@@ -118,6 +124,7 @@ public class OdpsExportInputFormat extends InputFormat {
           start = dataInput.readLong();
           long end = dataInput.readLong();
           length = end - start + 1;
+          LOG.info("InputFormat readFields: start: " + start + ", end: " + end + ", length: " + length);
       }
   }
 }
